@@ -1,4 +1,4 @@
-package xyz.minor.gameengine
+package xyz.miieev.gameengine
 
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL

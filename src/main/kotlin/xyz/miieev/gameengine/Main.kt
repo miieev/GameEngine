@@ -1,11 +1,10 @@
-package xyz.minor.gameengine
+package xyz.miieev.gameengine
 
 import org.lwjgl.BufferUtils
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.ARBVertexArrayObject.glBindVertexArray
 import org.lwjgl.opengl.ARBVertexArrayObject.glGenVertexArrays
 import org.lwjgl.opengl.GL30.*
-import java.awt.Color
 import kotlin.system.exitProcess
 
 const val VERTEX_SHADER = """
@@ -59,9 +58,10 @@ fun main() {
 
     glDeleteShader(vertexShader)
     glDeleteShader(fragmentShader)
+
     var color = Color(255, 255, 210, 255)
     var currentTick = 0
-    val colorUniform = glGetUniformLocation(shaderProgram, "uColor") // 22 строчка
+    val colorUniform = glGetUniformLocation(shaderProgram, "uColor")
 
     while (!glfwWindowShouldClose(window.id)) {
         glfwPollEvents()
@@ -70,8 +70,7 @@ fun main() {
         println(currentTick)
 
         if (currentTick % 50 == 0) {
-            val newBlue = (color.blue - 5).coerceIn(0, 255)
-            color = Color(color.red, color.green, newBlue, color.alpha)
+            color = color.darken(5f)
         }
 
         glUseProgram(shaderProgram)
@@ -83,17 +82,13 @@ fun main() {
         )
 
         val buffer = BufferUtils.createFloatBuffer(vertices.size).put(vertices).flip()
-
         glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW)
-        glUniform4f(
-            colorUniform,
-            color.red / 255f,
-            color.green / 255f,
-            color.blue / 255f,
-            color.alpha / 255f
-        )
 
-        glDrawArrays(GL_TRIANGLES, 0, vertices.size)
+        // Используем преобразованный цвет из объекта Color
+        val glColor = color.toOpenGL()
+        glUniform4f(colorUniform, glColor[0], glColor[1], glColor[2], glColor[3])
+
+        glDrawArrays(GL_TRIANGLES, 0, vertices.size / 2)
 
         glfwSwapBuffers(window.id)
 
