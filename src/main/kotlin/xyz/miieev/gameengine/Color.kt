@@ -1,9 +1,9 @@
 package xyz.miieev.gameengine
 
 data class Color(
-    val red: Float,
-    val green: Float,
-    val blue: Float,
+    var red: Float,
+    var green: Float,
+    var blue: Float,
     val alpha: Float
 ) {
     init {
@@ -20,19 +20,18 @@ data class Color(
         alpha.coerceIn(0, 255) / 255f
     )
 
-    fun darken(amount: Float): Color {
+    fun darken(amount: Float) {
         val factor = 1 - (amount / 100).coerceIn(0.0f, 1.0f)
-        return Color(red * factor, green * factor, blue * factor, alpha)
+        red *= factor
+        green *= factor
+        blue *= factor
     }
 
-    fun lighten(amount: Float): Color {
+    fun lighten(amount: Float) {
         val factor = 1 + (amount / 100).coerceIn(0.0f, 1.0f)
-        return Color(
-            (red * factor).coerceIn(0.0f, 1.0f),
-            (green * factor).coerceIn(0.0f, 1.0f),
-            (blue * factor).coerceIn(0.0f, 1.0f),
-            alpha
-        )
+        red *= factor.coerceIn(0.0f, 1.0f)
+        green *= factor.coerceIn(0.0f, 1.0f)
+        blue *= factor
     }
 
     fun toOpenGL(): FloatArray = floatArrayOf(red, green, blue, alpha)

@@ -59,7 +59,7 @@ fun main() {
     glDeleteShader(vertexShader)
     glDeleteShader(fragmentShader)
 
-    var color = Color(255, 255, 210, 255)
+    var color = Color(255, 255, 255, 255)
     var currentTick = 0
     val colorUniform = glGetUniformLocation(shaderProgram, "uColor")
 
@@ -70,7 +70,7 @@ fun main() {
         println(currentTick)
 
         if (currentTick % 50 == 0) {
-            color = color.darken(5f)
+            color.darken(5f)
         }
 
         glUseProgram(shaderProgram)
@@ -84,7 +84,6 @@ fun main() {
         val buffer = BufferUtils.createFloatBuffer(vertices.size).put(vertices).flip()
         glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW)
 
-        // Используем преобразованный цвет из объекта Color
         val glColor = color.toOpenGL()
         glUniform4f(colorUniform, glColor[0], glColor[1], glColor[2], glColor[3])
 
